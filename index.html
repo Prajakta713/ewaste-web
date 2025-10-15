@@ -1,35 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>E-Waste Awareness and Locator System</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>E-Waste Awareness and Locator System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Google Fonts for better UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background-color: #f7f9fc; color: #333; }
+    
+    header {
+      background-color: #2E7D32;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    .info {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      line-height: 1.6;
+    }
 
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-  body { background-color: #f7f9fc; color: #333; }
-  header { background-color: #2E7D32; color: white; padding: 20px; text-align: center; font-size: 28px; font-weight: 700; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-  nav { display: flex; justify-content: center; background-color: #1B5E20; flex-wrap: wrap; }
-  nav button { background-color: #388E3C; border: none; color: white; padding: 12px 25px; margin: 5px; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-  nav button:hover { background-color: #43A047; }
-  nav button.active { background-color: #81C784; color: #000; }
-  section { display: none; padding: 20px; min-height: 70vh; }
-  section.active { display: block; }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #1B5E20;
+      flex-wrap: wrap;
+    }
+    nav button {
+      background-color: #388E3C;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      margin: 5px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    nav button:hover { background-color: #43A047; }
+    nav button.active { background-color: #81C784; color: #000; }
 
-  /* Video and Canvas */
-  #videoContainer { position: relative; width: 100%; max-width: 600px; margin: auto; }
-  #video { width: 100%; border-radius:10px; border:2px solid #ccc; }
-  #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    section { display: none; padding: 20px; min-height: 70vh; }
+    section.active { display: block; }
 
-  @media(max-width:768px){ nav button { flex: 1 1 45%; } }
-</style>
+    .map-container, iframe {
+      width: 100%;
+      height: 80vh;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      overflow: hidden;
+    }
+
+    .detection-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    button.detect-btn {
+      margin-top: 15px;
+      background-color: #2E7D32;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.detect-btn:hover { background-color: #43A047; }
+
+    @media(max-width: 768px){
+      nav button { flex: 1 1 45%; }
+    }
+  </style>
 </head>
 <body>
 
 <header>E-Waste Awareness and Locator System</header>
+
+<div class="info">
+  <h2>About this Web App</h2>
+  <p>
+    This platform helps users in Mumbai locate nearby e-waste recycling centers, 
+    calculate the amount of electronic waste they generate, and detect e-waste in images using an AI model. 
+    It is designed to raise awareness about proper e-waste disposal and promote sustainable practices.
+  </p>
+</div>
 
 <nav>
   <button class="tab-btn active" data-tab="mapTab">Locator Map</button>
@@ -37,80 +109,41 @@
   <button class="tab-btn" data-tab="detectionTab">E-Waste Detection</button>
 </nav>
 
-<!-- Map Tab -->
+<!-- Tab 1: Map -->
 <section id="mapTab" class="active">
-  <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d353035.4993396248!2d72.77016220086594!3d19.175225359628193!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1se-waste%20center%20in%20india!5e0!3m2!1sen!2sin!4v1760560827909!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-</section>
-
-<!-- Calculator Tab -->
-<section id="calculatorTab">
-  <iframe src="https://ewaste-survey-form.vercel.app/"></iframe>
-</section>
-
-<!-- Detection Tab -->
-<section id="detectionTab">
-  <div id="videoContainer">
-    <video id="video" autoplay muted playsinline></video>
-    <canvas id="canvas"></canvas>
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d241325.66263511145!2d72.69403446147435!3d19.076331100000015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1se-waste%20center%20mumbai!5e0!3m2!1sen!2sin!4v1759944698672!5m2!1sen!2sin"></iframe>
   </div>
 </section>
 
-<!-- Roboflow SDK -->
-<script src="https://unpkg.com/@roboflow/inference@1.5.0"></script>
+<!-- Tab 2: Calculator -->
+<section id="calculatorTab">
+  <iframe src="https://ewaste-survey-form.vercel.app/" width="100%" height="80vh"></iframe>
+</section>
+
+<!-- Tab 3: Detection -->
+<section id="detectionTab">
+  <div class="detection-container">
+    <h3>E-Waste Detection</h3>
+    <p>Click the button below to open the live Roboflow demo:</p>
+    <a href="https://demo.roboflow.com/e-waste-egdcx/1?publishable_key=rf_jSlhLt8vJsSpe8bz8mmeczBDYIV2" target="_blank">
+      <button class="detect-btn">Open Detection</button>
+    </a>
+  </div>
+</section>
 
 <script>
-// Tab functionality
-const tabs = document.querySelectorAll('.tab-btn');
-const sections = document.querySelectorAll('section');
-tabs.forEach(btn => {
-  btn.addEventListener('click', () => {
-    tabs.forEach(b=>b.classList.remove('active'));
-    sections.forEach(s=>s.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
-  });
-});
-
-// E-Waste Detection Setup
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-async function startDetection() {
-  // Ask for camera access
-  const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-  video.srcObject = stream;
-
-  // Load Roboflow model
-  const model = new Roboflow.Inference("rf_jSlhLt8vJsSpe8bz8mmeczBDYIV2", "e-waste-egdcx", "v1");
-
-  async function detectFrame() {
-    const predictions = await model.detect(video);
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // Draw predictions
-    predictions.forEach(pred => {
-      ctx.strokeStyle = "red";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(pred.x, pred.y, pred.width, pred.height);
-      ctx.fillStyle = "red";
-      ctx.font = "18px Arial";
-      ctx.fillText(`${pred.class} (${Math.round(pred.confidence*100)}%)`, pred.x, pred.y > 20 ? pred.y-5 : pred.y+20);
+  // Tab functionality
+  const tabs = document.querySelectorAll('.tab-btn');
+  const sections = document.querySelectorAll('section');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
     });
-
-    requestAnimationFrame(detectFrame);
-  }
-
-  video.onloadedmetadata = () => {
-    detectFrame();
-  };
-}
-
-// Only start detection when user opens the Detection tab
-document.querySelector('[data-tab="detectionTab"]').addEventListener('click', startDetection);
+  });
 </script>
 
 </body>
